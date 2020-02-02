@@ -32,8 +32,8 @@ out_folder = r'D:\manz_cn\Desktop\3D_results\RIV_SENS\3D_model_slices\geo'
 
 #1.
 tec_3D = imod.tec.load(r'D:\manz_cn\Desktop\3D_results\Bkk_006_3.2.10_f_new_geology\SP_6-11\CONCVELO.tec', times=[0,-1])	#only read last stress period
-#2.
-#make 3D model grid with coordinates for x and y position of tecfile units
+
+#2. make 3D model grid with coordinates for x and y position of tecfile units
 cell_size = 1000 #in meters
 #lower left corner:
 X_min = 558342.7

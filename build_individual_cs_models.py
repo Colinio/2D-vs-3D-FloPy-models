@@ -9,10 +9,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 #from modeltools import cs_model 
 import os
-#from mpl_toolkits.basemap import Basemap
-#from matplotlib.patches import Polygon
-#from matplotlib.collections import PatchCollection
-#from matplotlib.patches import PathPatch
 from matplotlib.colors import Normalize
 from matplotlib import colors
 from matplotlib import colorbar
@@ -36,14 +32,14 @@ plot_profile_yrs_all = [0.1, 10, 15, 30, 50, 75, 80, 100, 150, 200, 250, 300, 35
 
 #   Define all important directories 
 
-model_dir = r'D:\manz_cn\Desktop\_2D_for_Colin\with_new_geology\_models'
+model_dir = r'\models'
  
-mf_exe_dir = r'D:\manz_cn\Desktop\_2D_for_Colin\with_new_geology\Modelling\MF2005.1_12\MF2005.1_12\bin\mf2005.exe'
-mt3d_exe_dir = r'D:\manz_cn\Desktop\_2D_for_Colin\with_new_geology\Modelling\mt3d-usgs_1.0\mt3d-usgs_Distribution\bin\MT3D-USGS_64.exe'
-swat_exe_dir = r'D:\manz_cn\Desktop\_2D_for_Colin\with_new_geology\Modelling\swt_v4_00_05\swt_v4_00_05\exe\swt_v4x64.exe'
+mf_exe_dir = r'\mf2005.exe'
+mt3d_exe_dir = r'\MT3D-USGS_64.exe'
+swat_exe_dir = r'\swt_v4x64.exe'
 
-model_dir = r'D:\manz_cn\Desktop\_2D_for_Colin\with_new_geology\_models\_2D_models_const_NUMBER_of_layers_3'
-output_dir = r'D:\manz_cn\Desktop\_2D_for_Colin\output\test'
+model_dir = r'\model_dir'
+output_dir = r'\output_dir'
 
 #   loop through the model_dir and go COSCAT by COSCAT region
 for subdir, dirs, files in os.walk(model_dir):
@@ -230,15 +226,8 @@ for subdir, dirs, files in os.walk(model_dir):
             #  create the SSM dictionary where the ssm input will be written to
             itype = flopy.mt3d.Mt3dSsm.itype_dict()
 
-            #   the first inland column is the GHB fresh boundary, assign it for all the layers in that column
-            #   also the last column of the 2D cross-section will hold the sea GHB cells
-
-            #   weird error if there is ncol instead of ncol - 1, for some reason it fills in one column extra
-            #   in the GHB and SSM lists which is out of the domain and that is why the model crashes.
-
             #generate noise array for conc and sea lvl:
             noise = np.random.normal(-0.001, 0.001, ncol)
-            
             
             for c in xrange(nlay):
                 ghb_input_lst.append([c, 0, 0, top[0][0], ghb_inland])
@@ -436,21 +425,12 @@ for subdir, dirs, files in os.walk(model_dir):
             conc = ucnobj.get_alldata()
             cbbobj = bf.CellBudgetFile(os.path.join(out_dir, modelname + '.cbc'))
             times_heads = cbbobj.get_times()       
-       
-            #plt.imshow(head[0][:, 0, :])
-            
-            # 20) Write Tecplot output
-            #x coordinate = pt_x_lst
-            #y coordinate = pt_y_lst
-            #heads = head
-            #conc = conc
             
             utm_lst = []
             
             #for i in x:
             #transform lat-lon to utm:
             for i in range(0,pt_x_lst.size):
-                #x_utm, y_utm, zone, P = utm.from_latlon(y[i],x[i])
                 utm_lst.append(utm.from_latlon(float(pt_y_lst[i]), float(pt_x_lst[i])))
                 
                 utm_array = np.array(utm_lst)
@@ -460,21 +440,15 @@ for subdir, dirs, files in os.walk(model_dir):
                 
                 y_utm = utm_array[:,1]
             
-            #for each stress period right results in tecfile (can also use this tecfile for the later interpolation of the data to a 3D extent!!!, and also the knowledge of your output data is crutial for this step!)
-            for k in range(0, nstp[0]):
-                
-                #write textfile with modelspecific name ending (.tec)
-                #file = open(os.path.join(model_dir + '\\cs_model_' + str(cs_id), "cs_model_" + str(cs_id)+ "_SP_" +str([k]) + ".tec"), "w")  #writes tecfile for each SP
+                for k in range(0, nstp[0]):
+
                 file = open(os.path.join(output_dir , "cs_model_" + str(cs_id)+ "_SP_" +str(k+1) + ".tec"), "w")  #writes tecfile for each SP
-                #first write header: 
-                
+
                 """Example header:
                 VARIABLES= "X", "Y", "Z", "HEAD" , "CONC" , "VC" , "VR", "VL"
                 ZONE T = " 168.00 DAYS" I = 51, J = 18, K = 84, DATAPACKING = POINT
                 """
                 timezn = (perlen[0]/ (nstp[0])) *(k+1)
-                #file.write.....
-                #file.write("VARIABLES= \"X\", \"Y\", \"Z\", \"HEAD\", \"CONC\" , \"VC\" , \"VR\", \"VL\"" + "\n")
                 file.write("VARIABLES= \"X\", \"Y\", \"Z\", \"HEAD\", \"CONC\"" + "\n")
                 file.write("ZONE T = \""+str(cs_id))
                 file.write(" ")
@@ -507,7 +481,7 @@ for subdir, dirs, files in os.walk(model_dir):
                 file.write(str(k+1)+"\n")
             file.close()
             
-            #make csv file with all points addded into it:
+            #make csv file
             for k in range(0, nstp[0]):
                 for i in range(0,nlay):
                     with open(os.path.join(output_dir, "3_SP_" +str(k+1) + '_layer_' + str(i+1)+ ".csv"), mode='a+') as all_points:

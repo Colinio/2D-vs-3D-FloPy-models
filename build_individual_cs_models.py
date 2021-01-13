@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon July 26 13:02:19 2018
-
-@author: colin
-"""
-
 import matplotlib.pyplot as plt
 import numpy as np
 #from modeltools import cs_model 

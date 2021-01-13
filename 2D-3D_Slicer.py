@@ -23,15 +23,15 @@ nrow = 266			#3D model rows
 ncol = 285			#3d model cols
 nlay = 34			#layers
 m = sp - 1
-csv_files =  r'D:\manz_cn\Desktop\_2D_for_Colin\output_final\riv_sens\baseline\88284'
-out_folder = r'D:\manz_cn\Desktop\3D_results\RIV_SENS\3D_model_slices\geo'
+csv_files =  'path_input'
+out_folder = 'path_output'
 
 #Steps:
 #1. import x,y,z,head,conc,vx,vz,vy from 3D model
 #2. read tefile 3D and assign coordinates to the values:
 
 #1.
-tec_3D = imod.tec.load(r'D:\manz_cn\Desktop\3D_results\Bkk_006_3.2.10_f_new_geology\SP_6-11\CONCVELO.tec', times=[0,-1])	#only read last stress period
+tec_3D = imod.tec.load('path_tec_file')
 
 #2. make 3D model grid with coordinates for x and y position of tecfile units
 cell_size = 1000 #in meters

@@ -1,13 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Nov 12 14:03:31 2018
-
-@author: manz_cn
-"""
-
-# -*- coding: utf-8 -*-
-
-
 import pandas as pd
 import scipy.interpolate
 import os
